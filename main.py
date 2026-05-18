@@ -109,9 +109,11 @@ def get_session():
 # ─────────────────────────────────────────
 
 app = FastAPI(
-    title="OrthoClinic Appointment API",
-    description="Orthopaedic clinic appointment management — backed by SQLModel ORM",
-    version="2.0.0",
+    # title="OrthoClinic Appointment API",
+    # description="Orthopaedic clinic appointment management — backed by SQLModel ORM",
+    # version="2.0.0",
+    docs_url=None,
+    redoc_url=None,
 )
 
 app.add_middleware(

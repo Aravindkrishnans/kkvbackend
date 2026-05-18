@@ -37,6 +37,7 @@ class UserBase(SQLModel):
     p_age: int
     p_number: int
     p_amount: str
+    p_clinic: str
 
 
 class User(UserBase, table=True):
@@ -59,6 +60,7 @@ class UserUpdate(SQLModel):
     p_age: Optional[int] = None
     p_number: Optional[int] = None
     p_amount: Optional[str] = None
+    p_clinic: Optional[str] = None
 
 
 class UserRead(UserBase):
@@ -81,7 +83,20 @@ engine = create_engine(
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
+    migrate_database()
     print(f"[ORM] Tables created / verified at: {db_path}")
+
+
+def migrate_database():
+    with sqlite3.connect(db_path) as conn:
+        columns = {
+            row[1] for row in conn.execute("PRAGMA table_info(users)").fetchall()
+        }
+        if "p_clinic" not in columns:
+            conn.execute(
+                "ALTER TABLE users ADD COLUMN p_clinic TEXT NOT NULL DEFAULT ''"
+            )
+            conn.commit()
 
 
 def get_session():
@@ -134,6 +149,7 @@ def create_appointment(payload: UserCreate, session: Session = Depends(get_sessi
         p_age=payload.p_age,
         p_number=payload.p_number,
         p_amount=payload.p_amount,
+        p_clinic=payload.p_clinic,
         created_at=now,
         edited_at=now,
     )

@@ -1,2 +1,6 @@
+[project]
+name = "kkvbackende"
+version = "0.1.0"
+
 [tool.vercel]
 entrypoint = "main:app"
